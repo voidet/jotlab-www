@@ -2,7 +2,7 @@
 <title>
 Richard S
 |
-hugo-github-actions
+Hugo: How To Use GitHub Actions To Push to a Remote Repository
 </title>
 <meta charset=utf-8><meta name=generator content="Hugo 0.91.2"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name=description content="
@@ -21,9 +21,9 @@ hugo-github-actions
 <script type=text/javascript src=/js/anatole-header.min.2a2cd9614b7d007dfbb75e8da19e3a0fa872ceab53c6d000c00b7a0c89b85bfc.js integrity="sha256-KizZYUt9AH37t16NoZ46D6hyzqtTxtAAwAt6DIm4W/w=" crossorigin=anonymous></script>
 <script type=text/javascript src=/js/anatole-theme-switcher.min.7fd87181cdd7e8413aa64b6867bb32f3a8dc242e684fc7d5bbb9f600dbc2b6eb.js integrity="sha256-f9hxgc3X6EE6pktoZ7sy86jcJC5oT8fVu7n2ANvCtus=" crossorigin=anonymous></script>
 <meta name=twitter:card content="summary">
-<meta name=twitter:title content="hugo-github-actions">
+<meta name=twitter:title content="Hugo: How To Use GitHub Actions To Push to a Remote Repository">
 <meta name=twitter:description content="As you may have read previously, I use Hugo for this blog.">
-<script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","articleSection":"posts","name":"hugo-github-actions","headline":"hugo-github-actions","alternativeHeadline":"","description":"
+<script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","articleSection":"posts","name":"Hugo: How To Use GitHub Actions To Push to a Remote Repository","headline":"Hugo: How To Use GitHub Actions To Push to a Remote Repository","alternativeHeadline":"","description":"
       
         As you may have read previously, I use Hugo for this blog.
 
@@ -91,7 +91,7 @@ Richard S
 .">
 <div class=post-content>
 <div class=post-title>
-<h1>hugo-github-actions</h1>
+<h1>Hugo: How To Use GitHub Actions To Push to a Remote Repository</h1>
 </div><p>As you may have read previously, I use Hugo for this blog. It&rsquo;s a simple Markdown to static website generator with some sleek free themes. Makes it easy for me! But I wanted to polish up the workflow on how I generate content, vs writing it in my code editor. So I stumbled across <a href=https://forestry.io/ title=https://forestry.io/>https://app.forestry.io/</a></p>
 <h2 id=the-workflow>The Workflow</h2>
 <p>So how does it work? Well I signed up for an account on forestry. It connects to my private Github repo where markdown files, templates etc are stored. When I write an article, Forestry pushes these changes via a git commit to the Github repo.</p>
@@ -101,13 +101,13 @@ Richard S
 <p>So the magic was in getting Github to talk to itself. The private repo with the markdown files has the Github action to generate the flat files, commits them to a branch, then I just want to publish that branch, only, to a public repo.</p>
 <p>The GitHub action looks like this:</p>
 <div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>name: GitHub Pages
-    
+
 on:
   push:
     branches:
       - main  # Set a branch to deploy
   pull_request:
-    
+
 jobs:
   deploy:
     runs-on: ubuntu-20.04
@@ -118,16 +118,16 @@ jobs:
         with:
           submodules: true  # Fetch Hugo themes (true OR recursive)
           fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
-    
+
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
         with:
           hugo-version: &#39;0.91.2&#39;
           # extended: true
-    
+
       - name: Build
         run: hugo --minify
-        
+
       - name: Create SSH key
         run: |
           mkdir ~/.ssh/
@@ -141,14 +141,14 @@ jobs:
           SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
           SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
           SSH_KEY_PATH: ${{ github.workspace }}/../private.key
-    
+
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         if: ${{ github.ref == &#39;refs/heads/main&#39; }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
-          
+
       - name: Deploy Files
         run: |
           git remote add www git@github.com:voidet/jotlab-www.git
