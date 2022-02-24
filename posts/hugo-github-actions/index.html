@@ -2,7 +2,7 @@
 <title>
 Richard S
 |
-Hugo: How to use Github Actions to Push to a Remote Repository
+hugo-github-actions
 </title>
 <meta charset=utf-8><meta name=generator content="Hugo 0.91.2"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name=description content="
@@ -17,13 +17,13 @@ Hugo: How to use Github Actions to Push to a Remote Repository
 <link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png>
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
 <link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png>
-<link rel=canonical href=/posts/test/>
+<link rel=canonical href=/posts/hugo-github-actions/>
 <script type=text/javascript src=/js/anatole-header.min.2a2cd9614b7d007dfbb75e8da19e3a0fa872ceab53c6d000c00b7a0c89b85bfc.js integrity="sha256-KizZYUt9AH37t16NoZ46D6hyzqtTxtAAwAt6DIm4W/w=" crossorigin=anonymous></script>
 <script type=text/javascript src=/js/anatole-theme-switcher.min.7fd87181cdd7e8413aa64b6867bb32f3a8dc242e684fc7d5bbb9f600dbc2b6eb.js integrity="sha256-f9hxgc3X6EE6pktoZ7sy86jcJC5oT8fVu7n2ANvCtus=" crossorigin=anonymous></script>
 <meta name=twitter:card content="summary">
-<meta name=twitter:title content="Hugo: How to use Github Actions to Push to a Remote Repository">
+<meta name=twitter:title content="hugo-github-actions">
 <meta name=twitter:description content="As you may have read previously, I use Hugo for this blog.">
-<script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","articleSection":"posts","name":"Hugo: How to use Github Actions to Push to a Remote Repository","headline":"Hugo: How to use Github Actions to Push to a Remote Repository","alternativeHeadline":"","description":"
+<script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","articleSection":"posts","name":"hugo-github-actions","headline":"hugo-github-actions","alternativeHeadline":"","description":"
       
         As you may have read previously, I use Hugo for this blog.
 
@@ -31,7 +31,7 @@ Hugo: How to use Github Actions to Push to a Remote Repository
       
 
 
-    ","inLanguage":"en","isFamilyFriendly":"true","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/jotlab.com\/posts\/test\/"},"author":{"@type":"Person","name":"Richard S"},"creator":{"@type":"Person","name":"Richard S"},"accountablePerson":{"@type":"Person","name":"Richard S"},"copyrightHolder":{"@type":"Person","name":"Richard S"},"copyrightYear":"2022","dateCreated":"2022-02-23T14:00:00.00Z","datePublished":"2022-02-23T14:00:00.00Z","dateModified":"2022-02-23T14:00:00.00Z","publisher":{"@type":"Organization","name":"Richard S","url":"https://jotlab.com","logo":{"@type":"ImageObject","url":"https:\/\/jotlab.comfavicon-32x32.png","width":"32","height":"32"}},"image":[],"url":"https:\/\/jotlab.com\/posts\/test\/","wordCount":"387","genre":[],"keywords":[]}</script>
+    ","inLanguage":"en","isFamilyFriendly":"true","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/jotlab.com\/posts\/hugo-github-actions\/"},"author":{"@type":"Person","name":"Richard S"},"creator":{"@type":"Person","name":"Richard S"},"accountablePerson":{"@type":"Person","name":"Richard S"},"copyrightHolder":{"@type":"Person","name":"Richard S"},"copyrightYear":"2021","dateCreated":"2021-11-30T00:00:00.00Z","datePublished":"2021-11-30T00:00:00.00Z","dateModified":"2021-11-30T00:00:00.00Z","publisher":{"@type":"Organization","name":"Richard S","url":"https://jotlab.com","logo":{"@type":"ImageObject","url":"https:\/\/jotlab.comfavicon-32x32.png","width":"32","height":"32"}},"image":[],"url":"https:\/\/jotlab.com\/posts\/hugo-github-actions\/","wordCount":"387","genre":[],"keywords":[]}</script>
 </head>
 <body>
 <header><div class="page-top
@@ -91,7 +91,7 @@ Richard S
 .">
 <div class=post-content>
 <div class=post-title>
-<h1>Hugo: How to use Github Actions to Push to a Remote Repository</h1>
+<h1>hugo-github-actions</h1>
 </div><p>As you may have read previously, I use Hugo for this blog. It&rsquo;s a simple Markdown to static website generator with some sleek free themes. Makes it easy for me! But I wanted to polish up the workflow on how I generate content, vs writing it in my code editor. So I stumbled across <a href=https://forestry.io/ title=https://forestry.io/>https://app.forestry.io/</a></p>
 <h2 id=the-workflow>The Workflow</h2>
 <p>So how does it work? Well I signed up for an account on forestry. It connects to my private Github repo where markdown files, templates etc are stored. When I write an article, Forestry pushes these changes via a git commit to the Github repo.</p>
@@ -100,14 +100,14 @@ Richard S
 <h2 id=the-action>The Action</h2>
 <p>So the magic was in getting Github to talk to itself. The private repo with the markdown files has the Github action to generate the flat files, commits them to a branch, then I just want to publish that branch, only, to a public repo.</p>
 <p>The GitHub action looks like this:</p>
-<pre><code>name: GitHub Pages
-
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>name: GitHub Pages
+    
 on:
   push:
     branches:
       - main  # Set a branch to deploy
   pull_request:
-
+    
 jobs:
   deploy:
     runs-on: ubuntu-20.04
@@ -118,13 +118,13 @@ jobs:
         with:
           submodules: true  # Fetch Hugo themes (true OR recursive)
           fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
-
+    
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
         with:
-          hugo-version: '0.91.2'
+          hugo-version: &#39;0.91.2&#39;
           # extended: true
-
+    
       - name: Build
         run: hugo --minify
         
@@ -132,19 +132,19 @@ jobs:
         run: |
           mkdir ~/.ssh/
           cd ~/.ssh
-          echo &quot;$SSH_PRIVATE_KEY&quot; &gt; id_rsa
+          echo &#34;$SSH_PRIVATE_KEY&#34; &gt; id_rsa
           pwd
           sudo chmod 600 id_rsa
-          echo &quot;$SSH_KNOWN_HOSTS&quot; &gt; known_hosts
+          echo &#34;$SSH_KNOWN_HOSTS&#34; &gt; known_hosts
         shell: bash
         env:
           SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
           SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
           SSH_KEY_PATH: ${{ github.workspace }}/../private.key
-
+    
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
-        if: ${{ github.ref == 'refs/heads/main' }}
+        if: ${{ github.ref == &#39;refs/heads/main&#39; }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
@@ -154,8 +154,7 @@ jobs:
           git remote add www git@github.com:voidet/jotlab-www.git
           git fetch www
           git push -u www gh-pages:main
-</code></pre>
-<p>Store your <code>SSH_PRIVATE_KEY</code> in Github Secrets for this repo, as well as your <code>SSH_KNOWN_HOSTS</code> file. I just used the same one stored on my laptop. It works.</p>
+</code></pre></div><p>Store your <code>SSH_PRIVATE_KEY</code> in Github Secrets for this repo, as well as your <code>SSH_KNOWN_HOSTS</code> file. I just used the same one stored on my laptop. It works.</p>
 </div>
 <div class=post-footer>
 <div class=info>
