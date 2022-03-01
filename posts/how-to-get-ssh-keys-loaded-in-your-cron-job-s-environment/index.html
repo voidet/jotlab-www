@@ -2,7 +2,7 @@
 <title>
 Richard S
 |
-Jotlab
+How to get SSH Keys Loaded in Your Cron Job's Environment
 </title>
 <meta charset=utf-8><meta name=generator content="Hugo 0.91.2"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name=description content="
@@ -17,14 +17,21 @@ Jotlab
 <link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png>
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
 <link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png>
-<link rel=canonical href=/>
-<link rel=alternate type=application/rss+xml href=/index.xml title=Jotlab>
+<link rel=canonical href=/posts/how-to-get-ssh-keys-loaded-in-your-cron-job-s-environment/>
 <script type=text/javascript src=/js/anatole-header.min.2a2cd9614b7d007dfbb75e8da19e3a0fa872ceab53c6d000c00b7a0c89b85bfc.js integrity="sha256-KizZYUt9AH37t16NoZ46D6hyzqtTxtAAwAt6DIm4W/w=" crossorigin=anonymous></script>
 <script type=text/javascript src=/js/anatole-theme-switcher.min.7fd87181cdd7e8413aa64b6867bb32f3a8dc242e684fc7d5bbb9f600dbc2b6eb.js integrity="sha256-f9hxgc3X6EE6pktoZ7sy86jcJC5oT8fVu7n2ANvCtus=" crossorigin=anonymous></script>
 <meta name=twitter:card content="summary">
-<meta name=twitter:title content="Jotlab">
-<meta name=twitter:description content>
-<script type=application/ld+json>{"@context":"http://schema.org","@type":"WebSite","name":"Jotlab","url":"https:\/\/jotlab.com","description":"","thumbnailUrl":"https:\/\/jotlab.com","license":""}</script>
+<meta name=twitter:title content="How to get SSH Keys Loaded in Your Cron Job's Environment">
+<meta name=twitter:description content="I have a cron job that runs every 6 hours. It basically generates a podcast RSS feed for bassdrive.">
+<script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","articleSection":"posts","name":"How to get SSH Keys Loaded in Your Cron Job\u0027s Environment","headline":"How to get SSH Keys Loaded in Your Cron Job\u0027s Environment","alternativeHeadline":"","description":"
+      
+        I have a cron job that runs every 6 hours. It basically generates a podcast RSS feed for bassdrive.
+
+
+      
+
+
+    ","inLanguage":"en","isFamilyFriendly":"true","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/jotlab.com\/posts\/how-to-get-ssh-keys-loaded-in-your-cron-job-s-environment\/"},"author":{"@type":"Person","name":"Richard S"},"creator":{"@type":"Person","name":"Richard S"},"accountablePerson":{"@type":"Person","name":"Richard S"},"copyrightHolder":{"@type":"Person","name":"Richard S"},"copyrightYear":"2022","dateCreated":"2022-02-28T14:00:00.00Z","datePublished":"2022-02-28T14:00:00.00Z","dateModified":"2022-02-28T14:00:00.00Z","publisher":{"@type":"Organization","name":"Richard S","url":"https://jotlab.com","logo":{"@type":"ImageObject","url":"https:\/\/jotlab.comfavicon-32x32.png","width":"32","height":"32"}},"image":[],"url":"https:\/\/jotlab.com\/posts\/how-to-get-ssh-keys-loaded-in-your-cron-job-s-environment\/","wordCount":"221","genre":[],"keywords":[]}</script>
 </head>
 <body>
 <header><div class="page-top
@@ -82,102 +89,26 @@ Richard S
 <div class=content>
 <div class="post
 .">
-<div class="post-title post-content">
-</div>
-</div>
-<div class="post
-.">
-<div class=post-title>
-<h3><a href=/posts/how-to-get-ssh-keys-loaded-in-your-cron-job-s-environment/>How to get SSH Keys Loaded in Your Cron Job's Environment</a></h3>
-</div>
 <div class=post-content>
-<div class=p_part>
-<p>
-I have a cron job that runs every 6 hours. It basically generates a podcast RSS feed for bassdrive.
-</p>
-</div>
+<div class=post-title>
+<h1>How to get SSH Keys Loaded in Your Cron Job's Environment</h1>
+</div><p>I have a cron job that runs every 6 hours. It basically generates a podcast RSS feed for bassdrive.com (great online station I&rsquo;ve been listening to for years). Originally I was hosting this RSS feed on my own server, which was no big deal, even with the 20,000 hits per day it gets. RSS clients are hungry for new episodes so it seems. But figured, if Github can host it for me, why not?</p>
+<p>So I came up with the crontab line:</p>
+<pre><code>0 */6 * * * /bin/bash /home/username/bassdrive/run.sh 2&gt;&amp;1
+</code></pre>
+<p>Which would output the RSS file to a public directory then git commit and push to the git repo of <a href=https://github.com/voidet/bassdrive-podcast title=https://github.com/voidet/bassdrive-podcast>https://github.com/voidet/bassdrive-podcast</a>. It made the file, but couldn&rsquo;t push to github, because it didn&rsquo;t have ssh keys loaded into the environment.</p>
+<h2 id=how-to-load-ssh-keys>How to Load SSH Keys</h2>
+<p>I found <a href=https://gist.github.com/Justintime50/297d0d36da40834b037a65998d2149ca>this</a> howto which ran me through how to use keychain. Ultimately, these were the steps needed:</p>
+<pre><code>sudo apt-get install keychain
+/usr/bin/keychain &quot;$HOME/.ssh/id_rsa&quot;
+0 */6 * * * . &quot;$HOME&quot;/.keychain/${HOSTNAME}-sh; /bin/bash /home/username/bassdrive/run.sh 2&gt;&amp;1
+</code></pre>
+<p>Notice how all I had to do was load the keychain via that prepended command to the existing crontab command. Keychain just appears to be some beautified access tools to the already existing ssh tools. But super simple! Now I have my script just committing changes back up to the git repo!</p>
 </div>
 <div class=post-footer>
-<div class=meta>
 <div class=info>
-<em class="fas fa-calendar-day"></em>
-<span class=date>
-Mon, Feb 28, 2022
-</span>
 </div>
 </div>
-</div>
-</div>
-<div class="post
-.">
-<div class=post-title>
-<h3><a href=/posts/hugo-github-actions/>Hugo: How To Use GitHub Actions To Push to a Remote Repository</a></h3>
-</div>
-<div class=post-content>
-<div class=p_part>
-<p>
-As you may have read previously, I use Hugo for this blog.
-</p>
-</div>
-</div>
-<div class=post-footer>
-<div class=meta>
-<div class=info>
-<em class="fas fa-calendar-day"></em>
-<span class=date>
-Tue, Nov 30, 2021
-</span>
-</div>
-</div>
-</div>
-</div>
-<div class="post
-.">
-<div class=post-title>
-<h3><a href=/posts/on-value/>On Value</a></h3>
-</div>
-<div class=post-content>
-<div class=p_part>
-<p>
-There&rsquo;s big challenge working in big organisations. Transperancy is lost as decisions trickle down.
-</p>
-</div>
-</div>
-<div class=post-footer>
-<div class=meta>
-<div class=info>
-<em class="fas fa-calendar-day"></em>
-<span class=date>
-Tue, Nov 30, 2021
-</span>
-</div>
-</div>
-</div>
-</div>
-<div class="post
-.">
-<div class=post-title>
-<h3><a href=/posts/my-first-post/>First Post 🥳</a></h3>
-</div>
-<div class=post-content>
-<div class=p_part>
-<p>
-Intro This is my first post on Hugo. I host it myself on a VPS backed by nginx.
-</p>
-</div>
-</div>
-<div class=post-footer>
-<div class=meta>
-<div class=info>
-<em class="fas fa-calendar-day"></em>
-<span class=date>
-Tue, Nov 23, 2021
-</span>
-</div>
-</div>
-</div>
-</div>
-<div class=pagination>
 </div>
 </div>
 </div>
